@@ -1,4 +1,6 @@
-# YOLOTrack
+# Ultimate-Frisbee-Analysis-and-Tracking
+
+Cooperate with CocoWang (Peter He). We want to create a model that can auto-track the players of Ultimate frisbee from the input video. Eventually, LLM will be interfaced to the project, providing practical use for the coach to sophisticate players performance.
 
 Realtime multi-object tracking with the official Ultralytics YOLO11 API and BoT-SORT tracker.
 
@@ -7,7 +9,7 @@ Realtime multi-object tracking with the official Ultralytics YOLO11 API and BoT-
 - YOLO11x model: `models/yolo11x.pt`
 - Tracker: official Ultralytics BoT-SORT via `model.track(..., tracker="botsort.yaml", persist=True)`
 - Inputs: video file, camera index, RTSP URL
-- Outputs: OpenCV visualization, JSON, CSV
+- Outputs: OpenCV visualization, annotated MP4, JSON, CSV
 
 ## Install
 
