@@ -31,15 +31,22 @@ class ScenePipeline:
         )
         self.depth = DepthEstimator(model_name=config.scene.depth_model, device=config.model.device)
 
-    def run(self, source: str) -> None:
+    def run(self, source: str, start_sec: float = 0.0, max_frames: int | None = None) -> None:
         output_dir = Path(self.config.export.output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
-        camera_motion = self.motion.estimate_video(source, self.config.scene.cotracker_chunk_size)
+        camera_motion = self.motion.estimate_video(
+            source,
+            self.config.scene.cotracker_chunk_size,
+            start_sec=start_sec,
+            max_frames=max_frames,
+        )
         if not camera_motion:
             raise RuntimeError(f"No camera motion estimated from source: {source}")
         self.motion.save(camera_motion, output_dir / self.config.scene.camera_motion_json)
 
         cap = open_video_capture(source)
+        if start_sec > 0:
+            cap.set(cv2.CAP_PROP_POS_MSEC, start_sec * 1000.0)
         annotated_writer = create_video_writer(cap, str(output_dir / self.config.scene.annotated_name), self.config.video_output.codec)
         map_writer = cv2.VideoWriter(
             str(output_dir / self.config.scene.scene_map_name),
@@ -63,6 +70,8 @@ class ScenePipeline:
                 if not ok:
                     break
                 frame_id += 1
+                if max_frames is not None and frame_id > max_frames:
+                    break
                 tracks, annotated = self.tracker.process_frame(frame, frame_id, mode="scene")
                 depth_map = self.depth.estimate(frame)
                 motion = camera_motion[min(frame_id - 1, len(camera_motion) - 1)]

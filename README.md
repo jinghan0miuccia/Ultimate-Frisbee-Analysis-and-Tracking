@@ -111,6 +111,12 @@ python main.py test.mp4 --mode track --no-display
 python main.py test.mp4 --mode scene
 ```
 
+Process a segment starting at one minute:
+
+```powershell
+python main.py FrisbeeTest.mp4 --mode scene --start-sec 60 --max-frames 30
+```
+
 Scene mode writes:
 
 - `outputs/annotated.mp4`

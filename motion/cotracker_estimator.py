@@ -49,16 +49,26 @@ class CoTrackerEstimator:
             motion.append({"frame": idx + 1, "dx": dx, "dy": dy, "rotation": rotation})
         return motion
 
-    def estimate_video(self, source: str, chunk_size: int = 120) -> list[dict[str, float | int]]:
+    def estimate_video(
+        self,
+        source: str,
+        chunk_size: int = 120,
+        start_sec: float = 0.0,
+        max_frames: int | None = None,
+    ) -> list[dict[str, float | int]]:
         cap = cv2.VideoCapture(int(source) if source.isdigit() else source)
         if not cap.isOpened():
             raise RuntimeError(f"Unable to open video source for CoTracker: {source}")
+        if start_sec > 0:
+            cap.set(cv2.CAP_PROP_POS_MSEC, start_sec * 1000.0)
         all_motion: list[dict[str, float | int]] = []
         frame_offset = 0
         try:
             while True:
                 frames: list[np.ndarray] = []
                 while len(frames) < chunk_size:
+                    if max_frames is not None and frame_offset + len(frames) >= max_frames:
+                        break
                     ok, frame = cap.read()
                     if not ok:
                         break
@@ -80,6 +90,8 @@ class CoTrackerEstimator:
                             }
                         )
                 frame_offset += len(frames)
+                if max_frames is not None and frame_offset >= max_frames:
+                    break
         finally:
             cap.release()
         return all_motion

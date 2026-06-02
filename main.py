@@ -31,6 +31,8 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Write the annotated output video to this path, for example outputs/annotated.mp4",
     )
+    parser.add_argument("--start-sec", type=float, default=0.0, help="Start processing from this timestamp in seconds")
+    parser.add_argument("--max-frames", type=int, default=None, help="Maximum number of frames to process")
     return parser.parse_args()
 
 
@@ -64,7 +66,7 @@ def main() -> int:
 
         if mode == "scene":
             scene = ScenePipeline(config)
-            scene.run(source=args.source)
+            scene.run(source=args.source, start_sec=args.start_sec, max_frames=args.max_frames)
             return 0
 
         exporter = ResultExporter(config.export)
