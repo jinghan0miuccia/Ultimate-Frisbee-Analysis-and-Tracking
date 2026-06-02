@@ -1,9 +1,9 @@
 model:
-  path: models/yolo11x.pt
+  path: models/yolo11s.pt
   confidence: 0.25
   iou: 0.7
   image_size: 640
-  device: null
+  device: cuda
 
 runtime:
   mode: track
@@ -40,7 +40,7 @@ trajectory:
 
 visualization:
   enabled: true
-  window_name: YOLO11x BoT-SORT Tracking
+  window_name: YOLO11s BoT-SORT Tracking
   box_thickness: 2
   trajectory_thickness: 2
   font_scale: 0.55

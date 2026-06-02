@@ -35,9 +35,11 @@ def parse_args() -> argparse.Namespace:
 
 def run_environment_check(config: AppConfig, source: str) -> None:
     from ultralytics import YOLO
+    from utils.device import resolve_device
 
     LOGGER.info("Loading model: %s", config.model.path)
     _ = YOLO(config.model.path)
+    LOGGER.info("Validating device: %s", resolve_device(config.model.device))
     LOGGER.info("Validating video source: %s", source)
     validate_video_source(source)
     LOGGER.info("Validating official BoT-SORT tracker: %s", config.tracker.config_path)

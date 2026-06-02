@@ -12,6 +12,7 @@ from ultralytics import YOLO
 from detector.yolo_detector import YoloDetector
 from trajectory.trajectory_manager import TrajectoryManager
 from utils.config import AppConfig
+from utils.device import resolve_device
 from utils.logging import get_logger
 from utils.types import BBox, TrackObject
 from utils.video import create_video_writer, open_video_capture
@@ -25,6 +26,7 @@ class BotSortTracker:
     def __init__(self, config: AppConfig) -> None:
         self.config = config
         self.model = YOLO(config.model.path)
+        self.device = resolve_device(config.model.device)
         self.detector = YoloDetector(config)
         self.trajectory = TrajectoryManager(max_history=config.trajectory.max_history)
         self.visualizer = Visualizer(config.visualization)
@@ -79,7 +81,7 @@ class BotSortTracker:
                     conf=self.config.model.confidence,
                     iou=self.config.model.iou,
                     imgsz=self.config.model.image_size,
-                    device=self.config.model.device,
+                    device=self.device,
                     classes=self.class_ids,
                     verbose=False,
                 )

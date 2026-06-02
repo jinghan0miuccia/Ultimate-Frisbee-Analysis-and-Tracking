@@ -6,7 +6,8 @@ Realtime multi-object tracking with the official Ultralytics YOLO11 API and BoT-
 
 ## Stack
 
-- YOLO11x model: `models/yolo11x.pt`
+- YOLO11s model: `models/yolo11s.pt`
+- Device: GPU by default with `model.device: cuda`
 - Tracker: official Ultralytics BoT-SORT via `model.track(..., tracker="botsort.yaml", persist=True)`
 - Inputs: video file, camera index, RTSP URL
 - Outputs: OpenCV visualization, annotated MP4, JSON, CSV
@@ -18,6 +19,20 @@ pip install -r requirements.txt
 ```
 
 If `python` opens the Windows Store stub on Windows, use the real interpreter path or `py`.
+
+For NVIDIA GPU inference, install a CUDA-enabled PyTorch build before running:
+
+```powershell
+python -m pip install --index-url https://download.pytorch.org/whl/cu128 torch torchvision
+```
+
+Then verify:
+
+```powershell
+python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)"
+```
+
+`config/config.yaml` uses `model.device: cuda` by default. If CUDA is unavailable, the program exits with a clear error instead of silently falling back to CPU.
 
 ## Run
 

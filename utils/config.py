@@ -9,7 +9,7 @@ import yaml
 
 @dataclass(frozen=True)
 class ModelConfig:
-    path: str = "yolo11x.pt"
+    path: str = "models/yolo11s.pt"
     confidence: float = 0.25
     iou: float = 0.7
     image_size: int = 640
