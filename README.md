@@ -7,7 +7,7 @@ Realtime multi-object tracking with the official Ultralytics YOLO11 API and BoT-
 ## Stack
 
 - YOLO11s model: `models/yolo11s.pt`
-- Device: GPU by default with `model.device: cuda`
+- Device: CPU by default for portability. Intel Arc/OpenVINO benchmarking is available in `tools/openvino_benchmark.py`.
 - Tracker: official Ultralytics BoT-SORT via `model.track(..., tracker="botsort.yaml", persist=True)`
 - Inputs: video file, camera index, RTSP URL
 - Outputs: OpenCV visualization, annotated MP4, JSON, CSV
@@ -32,7 +32,34 @@ Then verify:
 python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)"
 ```
 
-`config/config.yaml` uses `model.device: cuda` by default. If CUDA is unavailable, the program exits with a clear error instead of silently falling back to CPU.
+If you set `config/config.yaml` to `model.device: cuda` and CUDA is unavailable, the program exits with a clear error instead of silently falling back to CPU.
+
+## Intel Arc / OpenVINO Benchmark
+
+Install OpenVINO:
+
+```powershell
+pip install openvino
+```
+
+Run OpenVINO tracking on Intel Arc:
+
+```powershell
+python tools/openvino_benchmark.py outputs/FrisbeeTest_first300.mp4 --mode track --frames 300 --device intel:gpu --output outputs/openvino_track_300.mp4
+```
+
+Run the same OpenVINO model on CPU:
+
+```powershell
+python tools/openvino_benchmark.py outputs/FrisbeeTest_first300.mp4 --mode track --frames 300 --device cpu --output outputs/openvino_cpu_track_300.mp4
+```
+
+Observed on the current machine:
+
+- OpenVINO `intel:gpu`: 300 frames, 39.51 seconds, 7.59 FPS
+- OpenVINO `cpu`: 300 frames, 16.60 seconds, 18.07 FPS
+
+Conclusion for this hardware: Intel Arc works through OpenVINO, but OpenVINO CPU is faster for this workload. Keep Intel GPU as an optional backend, not the default.
 
 ## Run
 

@@ -3,7 +3,7 @@ model:
   confidence: 0.25
   iou: 0.7
   image_size: 640
-  device: cuda
+  device: cpu
 
 runtime:
   mode: track
