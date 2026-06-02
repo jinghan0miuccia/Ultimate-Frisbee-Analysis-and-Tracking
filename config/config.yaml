@@ -1,0 +1,57 @@
+model:
+  path: models/yolo11x.pt
+  confidence: 0.25
+  iou: 0.7
+  image_size: 640
+  device: null
+
+runtime:
+  mode: track
+  log_level: INFO
+
+tracker:
+  config_path: botsort.yaml
+  persist: true
+  parameters:
+    tracker_type: botsort
+    track_high_thresh: 0.25
+    track_low_thresh: 0.1
+    new_track_thresh: 0.25
+    track_buffer: 60
+    match_thresh: 0.8
+    fuse_score: true
+    gmc_method: sparseOptFlow
+    proximity_thresh: 0.5
+    appearance_thresh: 0.8
+    with_reid: false
+    model: auto
+
+classes:
+  filter:
+    - person
+    - car
+    - bus
+    - truck
+    - motorcycle
+    - bicycle
+
+trajectory:
+  max_history: 500
+
+visualization:
+  enabled: true
+  window_name: YOLO11x BoT-SORT Tracking
+  box_thickness: 2
+  trajectory_thickness: 2
+  font_scale: 0.55
+
+video_output:
+  enabled: false
+  path: null
+  codec: mp4v
+
+export:
+  enabled: true
+  output_dir: outputs
+  json_name: tracks.json
+  csv_name: tracks.csv
