@@ -1,5 +1,5 @@
 model:
-  path: models/yolo11s.pt
+  path: models/yolo11x.pt
   confidence: 0.25
   iou: 0.7
   image_size: 640
@@ -40,7 +40,7 @@ trajectory:
 
 visualization:
   enabled: true
-  window_name: YOLO11s BoT-SORT Tracking
+  window_name: YOLO11x BoT-SORT Tracking
   box_thickness: 2
   trajectory_thickness: 2
   font_scale: 0.55
@@ -55,3 +55,17 @@ export:
   output_dir: outputs
   json_name: tracks.json
   csv_name: tracks.csv
+
+scene:
+  annotated_name: annotated.mp4
+  scene_map_name: scene_map.mp4
+  scene_tracks_json: scene_tracks.json
+  scene_tracks_csv: scene_tracks.csv
+  camera_motion_json: camera_motion.json
+  map_width: 1000
+  map_height: 1000
+  map_scale: 180.0
+  depth_model: depth-anything/Depth-Anything-V2-Small-hf
+  cotracker_grid_size: 10
+  cotracker_resize_width: 384
+  cotracker_chunk_size: 120

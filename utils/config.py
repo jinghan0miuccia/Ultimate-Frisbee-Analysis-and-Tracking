@@ -9,7 +9,7 @@ import yaml
 
 @dataclass(frozen=True)
 class ModelConfig:
-    path: str = "models/yolo11s.pt"
+    path: str = "models/yolo11x.pt"
     confidence: float = 0.25
     iou: float = 0.7
     image_size: int = 640
@@ -64,6 +64,22 @@ class ExportConfig:
 
 
 @dataclass(frozen=True)
+class SceneConfig:
+    annotated_name: str = "annotated.mp4"
+    scene_map_name: str = "scene_map.mp4"
+    scene_tracks_json: str = "scene_tracks.json"
+    scene_tracks_csv: str = "scene_tracks.csv"
+    camera_motion_json: str = "camera_motion.json"
+    map_width: int = 1000
+    map_height: int = 1000
+    map_scale: float = 180.0
+    depth_model: str = "depth-anything/Depth-Anything-V2-Small-hf"
+    cotracker_grid_size: int = 10
+    cotracker_resize_width: int = 384
+    cotracker_chunk_size: int = 120
+
+
+@dataclass(frozen=True)
 class AppConfig:
     model: ModelConfig = field(default_factory=ModelConfig)
     runtime: RuntimeConfig = field(default_factory=RuntimeConfig)
@@ -73,6 +89,7 @@ class AppConfig:
     visualization: VisualizationConfig = field(default_factory=VisualizationConfig)
     video_output: VideoOutputConfig = field(default_factory=VideoOutputConfig)
     export: ExportConfig = field(default_factory=ExportConfig)
+    scene: SceneConfig = field(default_factory=SceneConfig)
 
 
 def load_config(path: str | Path) -> AppConfig:
@@ -86,4 +103,5 @@ def load_config(path: str | Path) -> AppConfig:
         visualization=VisualizationConfig(**data.get("visualization", {})),
         video_output=VideoOutputConfig(**data.get("video_output", {})),
         export=ExportConfig(**data.get("export", {})),
+        scene=SceneConfig(**data.get("scene", {})),
     )

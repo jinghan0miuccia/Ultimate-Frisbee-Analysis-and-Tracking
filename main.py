@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from exporter.result_exporter import ResultExporter
+from scene.scene_pipeline import ScenePipeline
 from tracker.bot_sort_tracker import BotSortTracker
 from utils.config import AppConfig, load_config
 from utils.logging import configure_logging, get_logger
@@ -20,9 +21,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", default="config/config.yaml", help="Path to YAML config")
     parser.add_argument(
         "--mode",
-        choices=("env", "detect", "track"),
+        choices=("env", "detect", "track", "scene"),
         default=None,
-        help="Run environment check, detection only, or tracking. Defaults to config runtime.mode.",
+        help="Run environment check, detection, tracking, or scene reconstruction. Defaults to config runtime.mode.",
     )
     parser.add_argument("--no-display", action="store_true", help="Disable OpenCV preview window")
     parser.add_argument(
@@ -59,6 +60,11 @@ def main() -> int:
     try:
         run_environment_check(config, args.source)
         if mode == "env":
+            return 0
+
+        if mode == "scene":
+            scene = ScenePipeline(config)
+            scene.run(source=args.source)
             return 0
 
         exporter = ResultExporter(config.export)

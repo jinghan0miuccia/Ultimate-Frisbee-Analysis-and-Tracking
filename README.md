@@ -6,7 +6,7 @@ Realtime multi-object tracking with the official Ultralytics YOLO11 API and BoT-
 
 ## Stack
 
-- YOLO11s model: `models/yolo11s.pt`
+- YOLO11x model: `models/yolo11x.pt`
 - Device: CPU by default for portability. Intel Arc/OpenVINO benchmarking is available in `tools/openvino_benchmark.py`.
 - Tracker: official Ultralytics BoT-SORT via `model.track(..., tracker="botsort.yaml", persist=True)`
 - Inputs: video file, camera index, RTSP URL
@@ -104,6 +104,20 @@ Headless export:
 ```powershell
 python main.py test.mp4 --mode track --no-display
 ```
+
+2D scene reconstruction:
+
+```powershell
+python main.py test.mp4 --mode scene
+```
+
+Scene mode writes:
+
+- `outputs/annotated.mp4`
+- `outputs/scene_map.mp4`
+- `outputs/scene_tracks.json`
+- `outputs/scene_tracks.csv`
+- `outputs/camera_motion.json`
 
 ## Configuration
 

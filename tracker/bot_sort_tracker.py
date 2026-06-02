@@ -73,21 +73,7 @@ class BotSortTracker:
                 if not ok:
                     break
                 frame_id += 1
-                results = self.model.track(
-                    source=frame,
-                    stream=False,
-                    persist=self.config.tracker.persist,
-                    tracker=self.tracker_config,
-                    conf=self.config.model.confidence,
-                    iou=self.config.model.iou,
-                    imgsz=self.config.model.image_size,
-                    device=self.device,
-                    classes=self.class_ids,
-                    verbose=False,
-                )
-                objects = self._tracks_to_objects(results, frame_id)
-                for obj in objects:
-                    self.trajectory.update(obj)
+                objects, annotated = self.process_frame(frame, frame_id, mode="track")
                 all_tracks.extend(objects)
                 now = time.perf_counter()
                 fps = 1.0 / max(now - last_time, 1e-6)
@@ -110,6 +96,31 @@ class BotSortTracker:
             cap.release()
             cv2.destroyAllWindows()
         return all_tracks
+
+    def process_frame(self, frame, frame_id: int, mode: str = "track") -> tuple[List[TrackObject], object]:
+        results = self.model.track(
+            source=frame,
+            stream=False,
+            persist=self.config.tracker.persist,
+            tracker=self.tracker_config,
+            conf=self.config.model.confidence,
+            iou=self.config.model.iou,
+            imgsz=self.config.model.image_size,
+            device=self.device,
+            classes=self.class_ids,
+            verbose=False,
+        )
+        objects = self._tracks_to_objects(results, frame_id)
+        for obj in objects:
+            self.trajectory.update(obj)
+        annotated = self.visualizer.draw(
+            frame,
+            objects,
+            self.trajectory.histories(),
+            fps=0.0,
+            mode=mode,
+        )
+        return objects, annotated
 
     def _show(self, frame) -> bool:
         cv2.imshow(self.config.visualization.window_name, frame)

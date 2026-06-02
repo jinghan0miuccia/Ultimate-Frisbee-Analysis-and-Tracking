@@ -4,3 +4,5 @@ PyYAML>=6.0.2
 numpy>=1.26.0
 lap>=0.5.12
 openvino>=2025.0.0
+transformers>=4.57.0
+accelerate>=1.12.0
