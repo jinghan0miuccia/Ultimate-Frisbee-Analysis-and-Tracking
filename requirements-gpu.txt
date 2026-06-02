@@ -1,0 +1,6 @@
+-r requirements.txt
+
+# Use this only outside a CUDA-ready PyTorch container.
+# RunPod official PyTorch templates already include CUDA PyTorch.
+torch>=2.8.0
+torchvision>=0.23.0

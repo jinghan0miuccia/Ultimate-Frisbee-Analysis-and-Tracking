@@ -5,6 +5,7 @@ venv/
 
 models/
 outputs/
+data/
 *.mp4
 *.avi
 *.mov

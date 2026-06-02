@@ -61,6 +61,18 @@ Observed on the current machine:
 
 Conclusion for this hardware: Intel Arc works through OpenVINO, but OpenVINO CPU is faster for this workload. Keep Intel GPU as an optional backend, not the default.
 
+## Cloud GPU
+
+For rented NVIDIA GPUs, use the RunPod setup in [cloud/RUNPOD.md](cloud/RUNPOD.md).
+
+The cloud config uses:
+
+```text
+config/config.gpu.yaml
+model.device: cuda
+model.path: models/yolo11x.pt
+```
+
 ## Run
 
 Environment check:
